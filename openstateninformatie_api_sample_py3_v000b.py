@@ -85,7 +85,10 @@ print('response.headers.get:', response.headers.get('content-type'))
 
 # Zet response om in een JSON format 
 data = response.content
+print("nog OK")
+
 js = json.loads(data)
+print("hier")
 # debug print(js)
 # debug print(json.dumps(js, indent=4)) # hiermee kan men de keys vinden in het bericht   
 # print(json.dumps(js, indent=4))
