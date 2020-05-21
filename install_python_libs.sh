@@ -16,9 +16,6 @@ pip install requests
 sudo apt-get install -y python3-yaml
 pip install pyyaml
 
-pip install json
-
-
 # toon geinstalleerde python libraries
 pip list
 
