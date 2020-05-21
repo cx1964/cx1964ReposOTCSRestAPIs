@@ -4,11 +4,28 @@
 # Opmerking: nieuwe style mbv GitHub API Token 
 # Referentie: https://medium.com/better-programming/create-github-repos-remotely-25153a6e6890
 
-###########################################
-### BEGIN Variable deel van het script ###
-##########################################
+## Instelling github Repository naam ##
+NEW_REPO_NAME='cx1964ReposOTCSRestAPIs' # <<<<<<-------------------------------------------------------------
+
+
+
 #
-# ### 00 Eenmalig voor iedere nieuwe Github repository deploy ment key aanmaken ###  <<<<<<----------------------------------
+#
+#
+###########################################
+### BEGIN constante deel van het script ###
+###########################################
+# GitHub User Name
+
+# Store current working directory.
+CURRENT_DIR=$PWD
+# Project directory can be passed as second argument to setup-repo, or will default to current working directory.
+PROJECT_DIR=${2:-$CURRENT_DIR}
+
+# Maak de github repos aan
+curl -u $GH_USER https://api.github.com/user/repos -d '{"name":"'$NEW_REPO_NAME'"}'
+
+# ### 00 Eenmalig voor iedere nieuwe Github repository deployment key aanmaken ###  <<<<<<----------------------------------
 # --------------------------------------------------------------------------------- 
 # Om access tokens te kunnen gebruiken (zie hieronder bij "01 Instelling en aanmaken access token")
 # moet men eerst eenmalig de deploy keys aanmaken
@@ -21,14 +38,6 @@
 #        - cx1964ReposOTCSRestAPIs
 #        - cx1964ReposOTCSRestAPIs.pub
 #
-# Vervolgens moet voor iedere nieuwe repository stap2 t/m stap8 van het aanmaken van deploy keys doorlopen.
-# stap2a: Maak eerst met https://github.com/cx1964?tab=repositories een nieuwe repository met de hand aan
-#         en vul die in in onderstaande variable NEW_REPO_NAME
-#
-#         ## 2a Instelling githup Repository naam ##
-#         Variable to store first argument to setup-repo
-NEW_REPO_NAME='cx1964ReposOTCSRestAPIs' # <<<<<<-------------------------------------------------------------
-
 # Volg vanaf stap2a de overige 8 stappen van de Setup paragraaf van https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys  
 
 # Stap5
@@ -46,48 +55,26 @@ NEW_REPO_NAME='cx1964ReposOTCSRestAPIs' # <<<<<<--------------------------------
 #        - cx1964ReposOTCSRestAPIs
 #        - cx1964ReposOTCSRestAPIs.pub
 
-# ### x Instelling en aanmaken access token ###
-#-----------------------------------------------
-# Maak eerst op github site een deploy --access token aan en copieer de waarde op
-# https://github.com/settings/tokens
-# en settings: https://miro.medium.com/max/1400/1*dsEiSQknY4CdhDVEGnTfsg.png
-# de plaats <access token waarde> in GH_API_TOKEN='<access token waarde>'
-GH_API_TOKEN='7a:ea:6b:70:a3:f7:58:50:e3:24:18:5b:6d:73:f0:40' # <<<<<<-------------------------------------------------------------------------------
+# Vervolgens moet voor iedere nieuwe repository stap2 t/m stap8 van het aanmaken van deploy keys doorlopen.
 #
-### EINDE Variable deel van het script ###
-#
-#
-#
-###########################################
-### BEGIN constante deel van het script ###
-###########################################
-# GitHub User Name
-GH_USER='cx1964'
-# Store current working directory.
-CURRENT_DIR=$PWD
-# Project directory can be passed as second argument to setup-repo, or will default to current working directory.
-PROJECT_DIR=${2:-$CURRENT_DIR}
-# GitHub repos Create API call -- zie https://developer.github.com/v3/
-curl -u $GH_USER https://api.github.com/user/repos -d '{"name":"'$NEW_REPO_NAME'"}'
 
-# curl -H "Authorization: token $GH_API_TOKEN" https://api.github.com/user/repos -d '{"name": "'"${NEW_REPO_NAME}"'"}'
-#curl -H "Authorization: token $GH_API_TOKEN" https://api.github.com/user/repos -d '{"name": "'"${NEW_REPO_NAME}"'"}'
-#curl -u $GH_USER:$GH_API_TOKEN https://api.github.com/user
+# Deployment key
+GH_Deployment_key='7a:ea:6b:70:a3:f7:58:50:e3:24:18:5b:6d:73:f0:40' # <<<<<<-------------------------------------------------------------------------------
 
-
-
-
+# Maak een local git repository aan
 git init $PROJECT_DIR
 
+# Markeer welke wijzigingen meegenomen moeten worden
 git add *.sh
 git add *.py
 git add README.md
 git add .gitignore
 
+# Commit de local wijzigingen
 git commit -m "Initiele files"
 
-# Initialize Git in project directory, and add the GH repo remote.
-git -C $PROJECT_DIR remote add origin git@github.com:$GH_USER/$NEW_REPO_NAME.git
+# koppel local aan remote repository
+git -C $PROJECT_DIR remote add origin https://github.com/$GH_USER/$NEW_REPO_NAME.git
 
+# Schrijf de wijzigingen weg naar de remote repository
 git push -u origin master
-### EINDE constante deel van het script ###
